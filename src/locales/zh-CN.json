@@ -1,0 +1,22 @@
+{
+  "settings.title": "应用设置",
+  "settings.language": "语言设置",
+  "settings.fontSize": "字体大小",
+  "settings.tab.general": "通用设置",
+  "settings.tab.models": "模型设置",
+  "nav.newChat": "新建聊天",
+  "nav.settings": "应用设置",
+  "input.preview": "预览",
+  "input.placeholder": "请输入消息",
+  "input.send": "发送",
+  "errors.copyImageFailed": "复制图片失败",
+  "menu.file": "文件",
+  "menu.newConversation": "新建对话",
+  "menu.settings": "设置",
+  "menu.edit": "编辑",
+  "menu.view": "视图",
+  "menu.window": "窗口",
+  "menu.help": "帮助",
+  "menu.about": "关于",
+  "contextMenu.deleteConversation": "删除对话"
+}

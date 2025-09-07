@@ -1,0 +1,22 @@
+{
+  "settings.title": "Settings",
+  "settings.language": "Language",
+  "settings.fontSize": "Font Size",
+  "settings.tab.general": "General",
+  "settings.tab.models": "Models",
+  "nav.newChat": "New Chat",
+  "nav.settings": "Settings",
+  "input.preview": "Preview",
+  "input.placeholder": "Type a message",
+  "input.send": "Send",
+  "errors.copyImageFailed": "Failed to copy image",
+  "menu.file": "File",
+  "menu.newConversation": "New Conversation",
+  "menu.settings": "Settings",
+  "menu.edit": "Edit",
+  "menu.view": "View",
+  "menu.window": "Window",
+  "menu.help": "Help",
+  "menu.about": "About",
+  "contextMenu.deleteConversation": "Delete Conversation"
+}
