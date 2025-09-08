@@ -103,7 +103,7 @@
               <AccordionContent class="px-4 py-3 border-t bg-gray-50">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <template
-                    v-for="item in providerForms[p.name]"
+                    v-for="item in providerForms[getProviderKey(p)]"
                     :key="item.key"
                   >
                     <div
@@ -117,7 +117,7 @@
                         :type="item.type || 'text'"
                         class="border rounded px-3 py-1 w-full max-w-xl"
                         v-model="item.value"
-                        @blur="onProviderFieldBlur(p.name, item)"
+                        @blur="onProviderFieldBlur(getProviderKey(p), item)"
                         :placeholder="item.placeholder || ''"
                       />
                     </div>
@@ -181,19 +181,22 @@ const activeTab = ref<'general' | 'models'>('general');
 const providerStore = useProviderStore();
 const providers = computed(() => providerStore.providers);
 const providerForms = reactive<Record<string, ProviderConfigItem[]>>({});
+const getProviderKey = (p: { name: string }) =>
+  p.name?.toLowerCase?.() || p.name;
 
 const initializeProviderForms = async () => {
   await providerStore.fetchProviders();
   providers.value.forEach((p) => {
-    const baseItems = (providerConfigs[p.name] || []).map((it) => ({ ...it }));
+    const key = getProviderKey(p);
+    const baseItems = (providerConfigs[key] || []).map((it) => ({ ...it }));
     const saved =
-      (config.providerSettings && config.providerSettings[p.name]) || {};
+      (config.providerSettings && config.providerSettings[key]) || {};
     baseItems.forEach((it) => {
       if (saved && Object.prototype.hasOwnProperty.call(saved, it.key)) {
         it.value = saved[it.key];
       }
     });
-    providerForms[p.name] = baseItems;
+    providerForms[key] = baseItems;
   });
 };
 
@@ -202,7 +205,6 @@ const toPlain = <T,>(obj: T): T => JSON.parse(JSON.stringify(obj));
 let ready = false;
 onMounted(async () => {
   const loaded = await window.electronApi.getConfig();
-  console.log('loaded', loaded);
   Object.assign(config, loaded || defaultConfig);
   ready = true;
 });
@@ -228,13 +230,13 @@ watch(
 );
 
 const onProviderFieldBlur = async (
-  providerName: string,
+  providerKey: string,
   item: ProviderConfigItem
 ) => {
   const settings = config.providerSettings || {};
-  const current = { ...(settings[providerName] || {}) } as Record<string, any>;
+  const current = { ...(settings[providerKey] || {}) } as Record<string, any>;
   current[item.key] = item.value;
-  config.providerSettings = { ...settings, [providerName]: current };
+  config.providerSettings = { ...settings, [providerKey]: current };
   await window.electronApi.setConfig(toPlain(config));
 };
 </script>

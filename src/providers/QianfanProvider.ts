@@ -2,33 +2,27 @@ import type {
   MessageStreamProps,
   ProviderConfigItem,
   UniversalChunkProps,
-  UpdatedStreamProps,
 } from '@/types';
+import OpenAI from 'openai';
 import BaseProvider from './BaseProvider';
-import { ChatCompletion, setEnvVariable } from '@baiducloud/qianfan';
+import { convertMessages } from '../helper';
 
 class QianfanProvider extends BaseProvider {
-  private client: ChatCompletion;
+  private client: OpenAI;
   constructor(config: ProviderConfigItem[]) {
-    setEnvVariable(
-      'QIANFAN_ACCESS_KEY',
-      config.find((item) => item.key === 'accessKey')?.value
-    );
-    setEnvVariable(
-      'QIANFAN_SECRET_KEY',
-      config.find((item) => item.key === 'secretKey')?.value
-    );
     super();
-    this.client = new ChatCompletion();
+    this.client = new OpenAI({
+      apiKey: config.find((item) => item.key === 'apiKey')?.value,
+      baseURL: config.find((item) => item.key === 'baseUrl')?.value,
+    });
   }
   async chat(messages: MessageStreamProps[], model: string) {
-    const stream: any = await this.client.chat(
-      {
-        messages,
-        stream: true,
-      },
-      model
-    );
+    const convertedMessages = await convertMessages(messages);
+    const stream = await this.client.chat.completions.create({
+      model: model.toLowerCase(),
+      messages: convertedMessages,
+      stream: true,
+    });
     const self = this;
     return {
       async *[Symbol.asyncIterator]() {
@@ -38,11 +32,13 @@ class QianfanProvider extends BaseProvider {
       },
     };
   }
-  protected transformResponse(chunk: any): UniversalChunkProps {
-    const { is_end, result } = chunk;
+
+  protected transformResponse(
+    chunk: OpenAI.Chat.Completions.ChatCompletionChunk
+  ): UniversalChunkProps {
     return {
-      is_end,
-      result,
+      is_end: chunk.choices[0].finish_reason === 'stop',
+      result: chunk.choices[0].delta.content || '',
     };
   }
 }

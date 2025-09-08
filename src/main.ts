@@ -4,6 +4,7 @@ import started from 'electron-squirrel-startup';
 import { loadAppConfig } from '@/utils/appConfig';
 import { createApplicationMenu } from './menu';
 import { registerAllIpcHandlers } from './ipc';
+import { updateElectronApp, UpdateSourceType } from 'update-electron-app';
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (started) {
@@ -70,6 +71,14 @@ app.on('activate', () => {
   if (BrowserWindow.getAllWindows().length === 0) {
     createWindow();
   }
+});
+
+updateElectronApp({
+  updateSource: {
+    type: UpdateSourceType.ElectronPublicUpdateService,
+    repo: 'oracis/ai-chat',
+  },
+  updateInterval: '1 hour',
 });
 
 // In this file you can include the rest of your app's specific main process

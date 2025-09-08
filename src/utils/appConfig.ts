@@ -16,13 +16,27 @@ export const loadAppConfig = (): AppConfig => {
   try {
     const content = fs.readFileSync(getConfigPath(), 'utf-8');
     const parsed = JSON.parse(content);
-    return { ...defaultAppConfig, ...parsed } as AppConfig;
+    const normalized = normalizeConfig({
+      ...defaultAppConfig,
+      ...parsed,
+    } as AppConfig);
+    return normalized;
   } catch {
     return { ...defaultAppConfig };
   }
 };
 
 export const saveAppConfig = (cfg: AppConfig): void => {
-  const merged = { ...defaultAppConfig, ...cfg } as AppConfig;
+  const merged = normalizeConfig({ ...defaultAppConfig, ...cfg } as AppConfig);
   fs.writeFileSync(getConfigPath(), JSON.stringify(merged, null, 2), 'utf-8');
 };
+
+function normalizeConfig(cfg: AppConfig): AppConfig {
+  const src = cfg.providerSettings || {};
+  const normalizedProviders: Record<string, Record<string, any>> = {};
+  Object.keys(src).forEach((key) => {
+    const lower = key?.toLowerCase?.() || key;
+    normalizedProviders[lower] = { ...(src as any)[key] };
+  });
+  return { ...cfg, providerSettings: normalizedProviders };
+}

@@ -20,14 +20,12 @@ export function createProvider(providerName: string): BaseProvider | Error {
 
   const getConfigValue = (key: string) =>
     providerConfig.find((it) => it.key === key)?.value || '';
-  const accessKey = getConfigValue('accessKey');
-  const secretKey = getConfigValue('secretKey');
   const apiKey = getConfigValue('apiKey');
   const baseUrl = getConfigValue('baseUrl');
 
   if (providerName === 'qianfan') {
-    if (!accessKey || !secretKey) {
-      throw new Error('缺少千帆API配置：请在设置中配置 accessKey 和 secretKey');
+    if (!apiKey || !baseUrl) {
+      throw new Error('缺少千帆API配置：请在设置中配置 apiKey 和 baseUrl');
     }
     return new QianfanProvider(providerConfig);
   } else if (providerName === 'dashscope') {

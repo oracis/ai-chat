@@ -24,7 +24,7 @@ export function registerChatHandlers(mainWindow: BrowserWindow) {
         data: {
           is_end: true,
           is_error: true,
-          result: error instanceof Error ? error.message : '未知错误',
+          result: error instanceof Error ? error.stack : '未知错误',
         },
       });
     }

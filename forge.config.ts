@@ -18,9 +18,10 @@ const config: ForgeConfig = {
   publishers: [
     new PublisherGithub({
       repository: {
-        owner: 'YOUR_GITHUB_USERNAME_OR_ORG',
-        name: 'YOUR_REPO_NAME',
+        owner: 'oracis',
+        name: 'ai-chat',
       },
+      authToken: process.env.gh_token || process.env.GH_TOKEN,
       draft: true,
       prerelease: true,
     }),

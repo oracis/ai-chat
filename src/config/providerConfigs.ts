@@ -1,22 +1,5 @@
 import type { ProviderConfigItem, ProviderConfigMap } from '@/types';
 
-const qianfanConfig: ProviderConfigItem[] = [
-  {
-    key: 'accessKey',
-    value: '',
-    label: 'Access Key',
-    placeholder: 'abcd',
-    type: 'text',
-  },
-  {
-    key: 'secretKey',
-    value: '',
-    label: 'Secret Key',
-    placeholder: 'abcd',
-    type: 'password',
-  },
-];
-
 const openaiConfig: ProviderConfigItem[] = [
   {
     key: 'apiKey',
@@ -34,9 +17,8 @@ const openaiConfig: ProviderConfigItem[] = [
   },
 ];
 
-
 export const providerConfigs: ProviderConfigMap = {
-  qianfan: qianfanConfig,
+  qianfan: openaiConfig,
   dashscope: openaiConfig,
   deepseek: openaiConfig,
 };
